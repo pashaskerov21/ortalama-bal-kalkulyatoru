@@ -16,14 +16,11 @@ $(document).ready(function () {
             `);
                 $('#lesson-wrapper').append(row);
             }
-        }
-
-
-        else if (count < currentCount) {
+        }else if (count < currentCount) {
             $('.lesson-row').slice(count).remove();
         }
 
-        $('.kredit-input').on('input', function () {
+        $('.kredit-input').off('input').on('input', function () {
             $(this).removeClass('is-invalid');
             let value = parseInt($(this).val());
             let min = parseInt($(this).attr('min'));
@@ -39,7 +36,7 @@ $(document).ready(function () {
             }
         });
 
-        $('.bal-input').on('input', function () {
+        $('.bal-input').off('input').on('input', function () {
             $(this).removeClass('is-invalid');
             let value = parseInt($(this).val());
             let min = parseInt($(this).attr('min'));
@@ -54,20 +51,35 @@ $(document).ready(function () {
                 $(this).val(max);
             }
         });
-        $('.row-delete-button').click(function () {
+        $('.row-delete-button').off('click').on('click', function () {
             $(this).closest('.lesson-row').remove();
-            let currentCount = $('.lesson-row').length;
-            $('#add-lesson-input').val(currentCount);
-
-            let max = parseInt($('#add-lesson-input').attr('max'));
-            if (currentCount < max) {
-                $('#add-lesson-button').attr('disabled', false);
-            }
-
-            if (currentCount === 1) {
-                $('.lesson-row .row-delete-button').remove();
-            }
+            updateDeleteButtons();
+            updateLessonCount();
         });
+
+        // Delete button-ları yenilə
+        updateDeleteButtons();
+        updateLessonCount();
+
+    }
+
+    function updateDeleteButtons() {
+        let totalRows = $('.lesson-row').length;
+        if (totalRows === 1) {
+            $('.lesson-row .row-delete-button').addClass('d-none');
+        } else {
+            $('.lesson-row .row-delete-button').removeClass('d-none');
+        }
+    }
+
+    function updateLessonCount() {
+        let currentCount = $('.lesson-row').length;
+        $('#add-lesson-input').val(currentCount);
+
+        let max = parseInt($('#add-lesson-input').attr('max'));
+        if (currentCount < max) {
+            $('#add-lesson-button').attr('disabled', false);
+        }
     }
     renderLessonRow(parseInt($('#add-lesson-input').val()));
 
@@ -152,7 +164,7 @@ $(document).ready(function () {
                 }
                 hasEmpty = true;
                 return;
-            }else{
+            } else {
                 hasEmpty = false;
             }
 
