@@ -1,8 +1,10 @@
 $(document).ready(function () {
     function renderLessonRow(count) {
+        //cari fenn setirlerinin sayi
         let currentCount = $('.lesson-row').length;
 
-
+        // eger daxil edilen deyer cari deyerden boyukdurse (count-currentcount) sayda en sona yeni setir elave edirik
+        // eger daxil edilen deyer cari deyerden kicikdirse daxil edilen deyer qeder en sondan setir silirik
         if (count > currentCount) {
             for (let i = currentCount; i < count; i++) {
                 let row = $(`
@@ -20,6 +22,7 @@ $(document).ready(function () {
             $('.lesson-row').slice(count).remove();
         }
 
+        //kredit ve bal inputlarina onlarin min max deyerlerinden basqa deyer daxil edilmesinin qarsisini aliriq
         $('.kredit-input').off('input').on('input', function () {
             $(this).removeClass('is-invalid');
             let value = parseInt($(this).val());
@@ -35,7 +38,6 @@ $(document).ready(function () {
                 $(this).val(max);
             }
         });
-
         $('.bal-input').off('input').on('input', function () {
             $(this).removeClass('is-invalid');
             let value = parseInt($(this).val());
@@ -51,18 +53,19 @@ $(document).ready(function () {
                 $(this).val(max);
             }
         });
+        //fenn setirlerinin silinmesi
         $('.row-delete-button').off('click').on('click', function () {
             $(this).closest('.lesson-row').remove();
             updateDeleteButtons();
             updateLessonCount();
         });
 
-        // Delete button-ları yenilə
+        // Delete düymelerinin default yenilenmesi
         updateDeleteButtons();
         updateLessonCount();
-
     }
 
+    // eger 1 fenn setiri qalibsa o setirde delete duymesini gizledirik 
     function updateDeleteButtons() {
         let totalRows = $('.lesson-row').length;
         if (totalRows === 1) {
@@ -71,7 +74,7 @@ $(document).ready(function () {
             $('.lesson-row .row-delete-button').removeClass('d-none');
         }
     }
-
+    //setir silinmesi ve elave olunmasi halinda input deyerinin yenilenmesi
     function updateLessonCount() {
         let currentCount = $('.lesson-row').length;
         $('#add-lesson-input').val(currentCount);
@@ -81,8 +84,10 @@ $(document).ready(function () {
             $('#add-lesson-button').attr('disabled', false);
         }
     }
+    //inputun default deyerine gore setirlerin render olunmasi
     renderLessonRow(parseInt($('#add-lesson-input').val()));
 
+    // setir elave et duymesi funksiyasi
     $('#add-lesson-button').click(function () {
         let value = parseInt($('#add-lesson-input').val());
         let max = parseInt($('#add-lesson-input').attr('max'));
@@ -99,6 +104,7 @@ $(document).ready(function () {
         }
     });
 
+    // setir elave etme inputunun funksiyasi
     $('#add-lesson-input').on('input', function () {
         let value = parseInt($(this).val());
         let min = parseInt($(this).attr('min'));
@@ -123,6 +129,7 @@ $(document).ready(function () {
         }
     });
 
+    //imtahan neticesine gore alinan qiymetin tapilmasi
     function findLetter(value) {
         if (value > 0 && value < 51) {
             return `<span class="fw-bolder text-danger">${value} F</span>`;
@@ -139,6 +146,7 @@ $(document).ready(function () {
         }
     };
 
+    // ortalama balin ve teqaudun tapilmasi
     function calculateResult() {
         let totalWeighted = 0;
         let totalCredits = 0;
